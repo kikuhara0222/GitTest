@@ -5,34 +5,12 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 
 import javax.imageio.ImageIO;
 
 public class ResizeSample {
-	private ResizeSample() {
-	}
-
-	/**
-	 * メインメソッド
-	 * 
-	 * @param args
-	 *            0:入力パス 1:出力パス 2:指定幅 3:指定高さ
-	 * @throws IOException
-	 */
-	public static void main(String[] args) throws IOException {
-		/*
-		 * String inPath = args[0]; String outPath = args[1]; int width =
-		 * Integer.parseInt(args[2]); int height = Integer.parseInt(args[3]);
-		 */
-
-		String inPath = "C:\\Users\\a.kikuhara\\Desktop\\input\\iruka.jpg";
-		String outPath = "C:\\Users\\a.kikuhara\\Desktop\\resize\\out.jpg";
-		int width = 300;
-		int height = 300;
-		resizeByScaledInstance(inPath, outPath, width, height);
-	}
-
 	/**
 	 * 画像リサイズするメソッド
 	 * 
@@ -46,11 +24,11 @@ public class ResizeSample {
 	 *            指定高さ
 	 * @throws IOException
 	 */
-	public static void resizeByScaledInstance(String inputPath, String outputPath, int maxWidth, int maxHeight)
+	public void resizeByScaledInstance(BufferedImage bufImg, String outputPath, int maxWidth, int maxHeight)
 			throws IOException {
 
 		// 元画像の読み込み
-		BufferedImage sourceImage = ImageIO.read(new File(inputPath));
+		BufferedImage sourceImage = bufImg;
 
 		// 縮小比率の計算
 		BigDecimal bdW = new BigDecimal(maxWidth);
@@ -70,7 +48,7 @@ public class ResizeSample {
 		// Image.SCALE_FAST 早くて汚い
 		// Image.SCALE_REPLICATE わからん そこそこ汚い
 		// Image.SCALE_SMOOTH 遅くてなめらか
-		Image targetImage = sourceImage.getScaledInstance(maxWidth, maxHeight, Image.SCALE_SMOOTH);
+		Image targetImage = sourceImage.getScaledInstance(maxWidth, maxHeight, Image.SCALE_AREA_AVERAGING);
 
 		// Image -> BufferedImageの変換
 		BufferedImage targetBufferedImage = new BufferedImage(targetImage.getWidth(null), targetImage.getHeight(null),
@@ -78,9 +56,7 @@ public class ResizeSample {
 		Graphics2D g = targetBufferedImage.createGraphics();
 		g.drawImage(targetImage, 0, 0, null);
 
-		// 拡張子取得
-		String ext = inputPath.substring(inputPath.lastIndexOf(".") + 1);
 		// 変換画像の出力
-		ImageIO.write(targetBufferedImage, ext, new File(outputPath));
+		ImageIO.write(targetBufferedImage, "JPG" , new File(outputPath));
 	}
 }
