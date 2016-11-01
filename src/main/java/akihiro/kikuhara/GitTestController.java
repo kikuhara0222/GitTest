@@ -9,6 +9,12 @@ public class GitTestController {
 	
 	@RequestMapping("/")
 	public String index(Model model){
+		ReadExcel read = new ReadExcel();
+		try{
+			model.addAttribute("msg",read.readExcel());
+		}catch(Exception e){
+			model.addAttribute("msg","エラーです");
+		}
 		return "index";
 	}
 	
